@@ -21,6 +21,23 @@ jobs:
         run: |
           pip install pdfplumber pandas openpyxl
 
+      - name: Debug: check Drive path and workspace
+        run: |
+          echo "PWD: $PWD"
+          echo "Listing workspace root:"
+          ls -la
+          DRIVE_PATH="/content/drive/MyDrive/Iris Blue Agency/Motor/2026/Renewal-2026/July 26/SCH,DN,VIG&CERT"
+          DIR_PARENT="/content/drive/MyDrive/Iris Blue Agency/Motor/2026/Renewal-2026/July 26"
+          if [ -d "$DRIVE_PATH" ]; then
+            echo "Drive folder exists: $DRIVE_PATH"
+            ls -la "$DRIVE_PATH"
+          elif [ -d "$DIR_PARENT" ]; then
+            echo "Parent dir exists but target folder missing; listing parent:"
+            ls -la "$DIR_PARENT"
+          else
+            echo "Drive path missing: $DRIVE_PATH"
+          fi
+
       - name: Execute script
         run: python main.py
 
@@ -28,6 +45,15 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add Compiled_Data.xlsx
-          git commit -m "Daily update of extracted data" || echo "No changes to commit"
-          git push
+          if [ -f "Compiled_Data.xlsx" ]; then
+            git add "Compiled_Data.xlsx"
+            # If there are no staged changes, skip commit
+            if git diff --cached --quiet; then
+              echo "No staged changes to commit"
+            else
+              git commit -m "Daily update of extracted data"
+              git push
+            fi
+          else
+            echo "Compiled_Data.xlsx not found, skipping commit"
+          fi
