@@ -7,7 +7,7 @@ import pandas as pd
 # usually via a Service Account JSON key or by using a publicly accessible folder link.
 # For this example, we assume the environment has access to the files.
 
-PDF_FOLDER = "path/to/your/pdfs"
+PDF_FOLDER = "content/drive/MyDrive/Iris Blue Agency/Motor/2026/Renewal-2026/July 26/SCH,DN,VIG&CERT"
 OUTPUT_FILE = "Compiled_Data.xlsx"
 
 def process_files():
