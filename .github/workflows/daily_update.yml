@@ -1,4 +1,3 @@
-```yaml
 name: Daily PDF Data Update
 
 on:
@@ -32,4 +31,3 @@ jobs:
           git add Compiled_Data.xlsx
           git commit -m "Daily update of extracted data" || echo "No changes to commit"
           git push
-```
