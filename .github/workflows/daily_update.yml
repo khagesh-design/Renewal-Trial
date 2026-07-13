@@ -1,0 +1,35 @@
+```yaml
+name: Daily PDF Data Update
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs at midnight every day
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo content
+        uses: actions/checkout@v2
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install pdfplumber pandas openpyxl
+
+      - name: Execute script
+        run: python main.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add Compiled_Data.xlsx
+          git commit -m "Daily update of extracted data" || echo "No changes to commit"
+          git push
+```
